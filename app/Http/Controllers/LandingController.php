@@ -42,8 +42,10 @@ class LandingController extends Controller
 
         $depature = $request->input('depature');
         $destination = $request->input('destination');
+        $tanggal = $request->input('tanggal');
+        $airline = $request->input('airline');
 
-        $url = "https://www.tiket.com/pesawat/search?d=$depature&a=$destination&date=2024-01-16&adult=1&child=0&infant=0&class=economy&dType=AIRPORT&aType=AIRPORT&dLabel=CGK&aLabel=SUB&type=depart&flexiFare=true";
+        $url = "https://www.tiket.com/pesawat/search?d=$depature&a=$destination&date=$tanggal&adult=1&child=0&infant=0&class=economy&dType=AIRPORT&aType=AIRPORT&dLabel=CGK&aLabel=SUB&type=depart&flexiFare=true$airline";
 
         try {
             $client = new Client();
