@@ -12,6 +12,7 @@ Route::get('/landing', [LandingController::class, 'index'])->name('landing.index
 Route::post('/scrape', [LandingController::class, 'scrapeData'])->name('landing.scrape');
 Route::get('/detail/{id}', [LandingController::class, 'detail'])->name('landing.detail');
 Route::get('/hasil', [LandingController::class, 'hasil'])->name('landing.hasil');
+Route::post('tambah', [LandingController::class, 'tambah'])->name('landing.tambah');
 
 Route::get('pesanan_add', [PesananController::class, 'create'])->name('pesanan.create');
 Route::post('pesanan_store', [PesananController::class, 'store'])->name('pesanan.store');

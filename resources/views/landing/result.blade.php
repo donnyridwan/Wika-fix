@@ -50,11 +50,13 @@
         @if(isset($response) && count($response) > 0)
             @foreach($response as $result)
                 <div class="card">
-                    <h3>ID: {{ $result['id'] }}</h3>
+                    {{-- <h3>ID: {{ $result['id'] }}</h3> --}}
                     <h3>Maskapai: {{ $result['maskapai'] }}</h3>
                     <h3>Harga: {{ $result['harga'] }}</h3>
                     <h3>Jam Berangkat: {{ $result['jamBerangkat'] }}</h3>
                     <h3>Jam Tiba: {{ $result['jamTiba'] }}</h3>
+                    <h3>Kota Asal: {{ $result['asal'] }}</h3>
+                    <h3>Kota Tujuan: {{ $result['tujuan'] }}</h3>
                     <a href="{{ route('landing.detail', ['id' => $result['id']]) }}" class="btn btn-primary">Lihat Detail</a>
                 </div>
             @endforeach
