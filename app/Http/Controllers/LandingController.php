@@ -117,18 +117,7 @@ class LandingController extends Controller
 
     public function detail($id)
     {
-        // // Ambil data dari session atau database sesuai kebutuhan
-        // $data = session('responses');
-
-        // if (isset($data[$id])) {
-        //     // Get the selected result
-        //     $selectedResult = $data[$id];}
-        // // Cari data dengan ID yang sesuai
-        // // $selectedResult = collect($data)->firstWhere('id', $id);
-
-        // // Kirim data ke halaman detail
-        // return view('landing.detail', compact('selectedResult'));
-        // Ambil data dari session atau database sesuai kebutuhan
+        // Ambil data dari session
         $data = session('response');
 
         // Initialize $selectedResult to handle cases where $id is not found
@@ -152,9 +141,21 @@ class LandingController extends Controller
             'jam_tiba' => 'required',
             'maskapai' => 'required',
             'harga' => 'required',
-            'pemesan' => 'required',
-            'penumpang' => 'required',
+            'tittle' => 'required|array',
+            'nama' => 'required|array',
+            'nik' => 'required|array',
         ]);
+
+        $penumpangArray = array_map(
+            function ($tittle, $nama, $nik) {
+                return $tittle . $nama . "-" . $nik;
+            },
+            $request->input('tittle'),
+            $request->input('nama'),
+            $request->input('nik')
+        );
+
+        $penumpang = implode(", ", $penumpangArray);
 
         // Menggunakan Query Builder Laravel dan Named Bindings untuk valuesnya
         DB::insert(
@@ -167,7 +168,7 @@ class LandingController extends Controller
                 'maskapai' => $request->maskapai,
                 'harga' => $request->harga,
                 'pemesan' => $request->pemesan,
-                'penumpang' => $request->penumpang,
+                'penumpang' => $penumpang,
                 'created_at' => NOW(),
             ]
         );
