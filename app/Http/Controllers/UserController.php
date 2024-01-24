@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash; // Import Hash facade
 
 class UserController extends Controller
 {
@@ -11,24 +12,19 @@ class UserController extends Controller
     {
         return view('user.add');
     }
-    // 'nama' => 'User',
-    //         'email' => 'user@example.com',
-    //         'password' => 'user_password',
-    //         'role' => 'user',
-    //         'perusahaan' => 'User Company',
-    //         'created_at' => now(),
-    //         'updated_at' => now(),
+
     public function store(Request $request)
     {
         $request->validate([
-
             'nama' => 'required',
             'email' => 'required',
-            'password'=> 'required',
+            'password' => 'required',
             'role' => 'required',
             'perusahaan' => 'required',
-
         ]);
+
+        // Hash the password using bcrypt
+        $hashedPassword = Hash::make($request->password);
 
         // Menggunakan Query Builder Laravel dan Named Bindings untuk valuesnya
         DB::insert(
@@ -36,10 +32,10 @@ class UserController extends Controller
             [
                 'nama' => $request->nama,
                 'email' => $request->email,
-                'password' => $request->password,
+                'password' => $hashedPassword, // Use the hashed password
                 'role' => $request->role,
                 'perusahaan' => $request->perusahaan,
-                'created_at' => NOW(), 
+                'created_at' => now(),
             ]
         );
 
@@ -57,36 +53,41 @@ class UserController extends Controller
         $data = DB::table('users')->where('id_user', $id)->first();
         return view('user.edit')->with('data', $data);
     }
+
     public function update($id, Request $request)
     {
         $request->validate([
             'nama' => 'required',
             'email' => 'required',
-            'password'=> 'required',
+            'password' => 'required',
             'role' => 'required',
             'perusahaan' => 'required',
         ]);
+
+        // Hash the password using bcrypt
+        $hashedPassword = Hash::make($request->password);
+
         // Menggunakan Query Builder Laravel dan Named Bindings untuk valuesnya
-        // DB::update('UPDATE user SET id_user =:id_user, judul_user = :judul_peminjam, alamat_peminjam = :alamat_peminjam WHERE id_peminjam = :id',
         DB::update(
             'UPDATE users SET nama = :nama, email = :email, password = :password, role = :role, perusahaan = :perusahaan, updated_at = :updated_at WHERE id_user = :id',
             [
-                'id'=> $id, 
+                'id' => $id,
                 'nama' => $request->nama,
                 'email' => $request->email,
-                'password' => $request->password,
+                'password' => $hashedPassword, // Use the hashed password
                 'role' => $request->role,
                 'perusahaan' => $request->perusahaan,
-                'updated_at' => NOW(), 
+                'updated_at' => now(),
             ]
         );
+
         return redirect()->route('user.index')->with('success', 'Data peminjam berhasil diubah');
     }
 
     public function delete($id)
     {
         // Menggunakan Query Builder Laravel dan Named Bindings untuk valuesnya
-        DB::delete('DELETE FROM user WHERE id_user =:id_user', ['id_user' => $id]);
+        DB::delete('DELETE FROM users WHERE id_user =:id_user', ['id_user' => $id]);
         return redirect()->route('user.index')->with('success', 'Data peminjam berhasil dihapus');
     }
 }
