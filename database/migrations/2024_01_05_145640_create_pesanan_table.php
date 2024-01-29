@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('jam_tiba');
             $table->string('maskapai');
             $table->string('harga');
-            $table->string('kode_tiket');
+            $table->string('kode_tiket')->nullable();
             $table->enum('status', ['proses', 'selesai', 'gagal'])->default('proses');
             $table->string('pemesan');
             $table->mediumText('penumpang');
