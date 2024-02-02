@@ -56,7 +56,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="pemesan" class="form-label">pemesan</label>
-                    <input type="text" class="form-control" id="pemesan" name="pemesan">
+            <input type="text" class="form-control" id="pemesan" name="pemesan" value="{{ $pemesan }}">
                 </div>
                 <div id="form-container-penumpang">
                     <div class="mb-3">

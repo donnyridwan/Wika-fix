@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
@@ -45,12 +46,13 @@ class LandingController extends Controller
         $tanggal = $request->input('tanggal');
         $airline = $request->input('airline');
 
-        $url = "https://www.tiket.com/pesawat/search?d=$depature&a=$destination&date=$tanggal&adult=1&child=0&infant=0&class=economy&dType=AIRPORT&aType=AIRPORT&dLabel=CGK&aLabel=SUB&type=depart&flexiFare=true$airline";
+        $url = "https://flights.booking.com/flights/SUB.AIRPORT-SRG.AIRPORT/?type=ONEWAY&adults=1&cabinClass=ECONOMY&children=&from=$depature.AIRPORT&to=$destination.AIRPORT&fromCountry=ID&toCountry=ID&fromLocationName=Bandara+Internasional+Soekarno-Hatta&toLocationName=Bandara+Internasional+Ahmad+Yani&depart=$tanggal&sort=BEST&travelPurpose=leisure&aid=397594&label=gog235jc-1DCAEoggI46AdIElgDaGiIAQGYARK4ARfIAQzYAQPoAQH4AQKIAgGoAgO4AruUlK0GwAIB0gIkMjM1ZjkzNjMtNTJlMS00ODU0LTg0ZTgtMGNjNTdmZTVkOTc42AIE4AIB";
+        $response = [];
 
         try {
             $client = new Client();
-            $username = 'U0000138959';
-            $password = 'l7Tmmbzi01knplOF0S';
+            $username = 'U0000143378';
+            $password = 'PW1bfc7aaa9a82a41a04f60e93da655aabb';
             $base64Credentials = base64_encode($username . ':' . $password);
 
             $response = $client->request('POST', 'https://scraper-api.smartproxy.com/v2/scrape', [
@@ -69,10 +71,10 @@ class LandingController extends Controller
                 $htmlContent = $dataArray['results'][0]['content'];
 
                 // Penentuan Class Yang ingin diambil
-                $classNameMaskapai = "Text_text__DSnue Text_size_b2__y3Q2E Text_weight_bold__m4BAY";
-                $classNameHarga = "Text_text__DSnue Text_variant_alert__7jMF3 Text_size_h3__qFeEO Text_weight_bold__m4BAY";
-                $classJam = "Text_text__DSnue Text_size_h3__qFeEO Text_weight_bold__m4BAY";
-                $classDestination = "Text_text__DSnue Text_variant_lowEmphasis__VihAq Text_size_b3__6n_9j";
+                $classNameMaskapai = "Text-module__root--variant-small_1___+fbYj";
+                $classNameHarga = "FlightCardPrice-module__priceContainer___nXXv2";
+                $classJam = "Text-module__root--variant-strong_1___SNYxf";
+                $classDestination = "Text-module__root--variant-small_1___+fbYj";
 
                 // Mencari dan menampilkan teks dari class yang diinginkan
                 $jam = $this->findClassFromHtml($htmlContent, $classJam);
@@ -85,15 +87,15 @@ class LandingController extends Controller
                 // Menampilkan hasil scraping
 
                 $response = [];
-                for ($i = 0; $i < count($maskapai); $i++) {
+                for ($i = 0; $i < count($harga); $i++) {
                     $response[] = [
-                        "id" => $i,
-                        "maskapai" => $maskapai[$i],
+                        "id"=>$i,
+                        "maskapai" => $maskapai[$i*10+8],
                         "harga" => $harga[$i],
-                        "jamBerangkat" => $jam[$i * 2],
-                        "jamTiba" => $jam[$i * 2 + 1],
-                        "asal" => $destination[$i * 4],
-                        "tujuan" => $destination[$i * 4 + 3],
+                        "jamBerangkat" =>$jam[$i*2+1],
+                        "jamTiba" =>$jam[$i*2+2],
+                        "asal"=>$maskapai[$i*10],
+                        "tujuan"=>$maskapai[$i*10+5],
                     ];
                 }
 
@@ -119,7 +121,7 @@ class LandingController extends Controller
     {
         // Ambil data dari session
         $data = session('response');
-
+        $pemesan = session('name');
         // Initialize $selectedResult to handle cases where $id is not found
         $selectedResult = null;
 
@@ -129,10 +131,10 @@ class LandingController extends Controller
         }
 
         // Kirim data ke halaman detail
-        return view('landing.detail', compact('selectedResult'));
+        return view('landing.detail', compact('selectedResult', 'pemesan'));
     }
 
-    public function tambah (Request $request)
+    public function tambah(Request $request)
     {
         $request->validate([
             'Kota_asal' => 'required',
@@ -173,5 +175,12 @@ class LandingController extends Controller
             ]
         );
         return redirect()->route('landing.index')->with('success', 'Data Pesanan berhasil disimpan');
+    }
+
+    public function cart()
+    {
+        $pemesan = session('name');
+        $keranjangs = DB::select('SELECT * FROM pesanan WHERE pemesan = :pemesan', ['pemesan' => $pemesan]);
+        return view('landing.cart')->with('keranjangs', $keranjangs);
     }
 }

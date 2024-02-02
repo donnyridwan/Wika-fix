@@ -16,8 +16,7 @@ Route::post('/scrape', [LandingController::class, 'scrapeData'])->name('landing.
 Route::get('/detail/{id}', [LandingController::class, 'detail'])->name('landing.detail');
 Route::get('/hasil', [LandingController::class, 'hasil'])->name('landing.hasil');
 Route::post('/tambah', [LandingController::class, 'tambah'])->name('landing.tambah');
-
-
+Route::get('/cart', [LandingController::class, 'cart'])->name('landing.cart');
 
 
 //Routing Admin Menu Tiket Pesanan

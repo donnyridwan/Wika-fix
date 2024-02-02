@@ -18,7 +18,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            session("role", $user->role);
+            session()->put('name', $user->nama);
             
             
             // Redirect user based on role

@@ -25,12 +25,15 @@
         <div class="h-20 flex justify-between px-6 md:px-16 bg-white">
             <p class="font-bold text-2xl my-auto">Logo</p>
             <div class="my-auto flex justify">
+                <form action="{{ route('landing.cart') }}">
                 <button class="mr-6">
                     <img src="{{ asset('assets/shopping-cart.svg') }}" alt="" class="h-6 w-6">
                 </button>
-                <button class=" bg-themeBlue text-white py-2 px-6">
-                    Logout
-                </button>
+            </form>
+                <form action="{{ route('logout') }}" class=" bg-themeBlue text-white py-2 px-6" method="POST">
+                    @csrf
+                    <button type="submit">Logout</button>
+                </form>
             </div>
         </div>
 
@@ -46,31 +49,33 @@
                 <form action="{{ route('landing.scrape') }}" method="post" class="flex py-10 px-8 bg-white rounded-3xl gap-10 justify-between flex-wrap">
                     @csrf
                     <div class="flex flex-col min-w-[180px]">
-                        <label for="departure" class="ml-1">Keberangkatan</label>
-                        <select class="cursor-pointer font-bold text-2xl" aria-label="Default select example" id="departure" name="departure">
-                            <option selected>Semarang</option>
-                            <option value="&airlines=GA">Jakarta</option>
-                            <option value="user">Ambon</option>
+                        <label for="destination">Keberangkatan</label>
+                        <select class=" form-select cursor-pointer font-bold text-2xl" aria-label="Default select example" id="depature" name="depature">
+                            <option selected>Keberangkatan</option>
+                            <option value="CGK">Jakarta</option>
+                            <option value="SUB">Surabaya</option>
+                            <option value="SRG">Semarang</option>
                         </select>
                     </div>
         
                     <div class="flex flex-col min-w-[180px]">
                         <label for="destination" class="ml-1">Tujuan</label>
-                        <select class="cursor-pointer font-bold text-2xl" aria-label="Default select example" id="destination" name="destination">
-                            <option selected>Semarang</option>
-                            <option value="&airlines=GA">Jakarta</option>
-                            <option value="user">Ambon</option>
+                        <select class=" form-select cursor-pointer font-bold text-2xl" aria-label="Default select example" id="destination" name="destination">
+                            <option selected>Tujuan</option>
+                            <option value="CGK">Jakarta</option>
+                            <option value="SUB">Surabaya</option>
+                            <option value="SRG">Semarang</option>
                         </select>
                     </div>
 
                     <div class="flex flex-col">
                         <label for="tanggal">Tanggal</label>
-                        <input type="text" class="cursor-pointer font-bold text-2xl w-44" id="datepicker" name="tanggal" required placeholder="pilih tanggal">
+                        <input type="text" class=" cursor-pointer font-bold text-2xl w-44" id="datepicker" name="tanggal" required placeholder="pilih tanggal">
                     </div>
 
                     <div class="flex flex-col min-w-[180px]">
                         <label for="airline" class="ml-1">Maskapai</label>
-                        <select class="cursor-pointer font-bold text-2xl" aria-label="Default select example" id="airline" name="airline">
+                        <select class=" form-select cursor-pointer font-bold text-2xl" aria-label="Default select example" id="airline" name="airline">
                             <option selected>Semua</option>
                             <option value="&airlines=GA">Garuda</option>
                             <option value="user">user</option>
