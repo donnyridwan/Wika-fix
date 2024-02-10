@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('kode_tiket')->nullable();
             $table->enum('status', ['proses', 'selesai', 'gagal'])->default('proses');
             $table->string('pemesan');
+            $table->string('tanggal');
             $table->mediumText('penumpang');
             $table->foreign('pemesan')->references('nama')->on('users')->onDelete('cascade');
             $table->timestamps();

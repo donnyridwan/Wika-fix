@@ -51,7 +51,7 @@ class PesananController extends Controller
                 'updated_at' => NOW(), 
             ]
         );
-        return redirect()->route('pesanan.index')->with('success', 'Data peminjam berhasil diubah');
+        return redirect()->route('pesanan.index')->with('success', 'Data tiket berhasil diubah');
     }
 
     public function delete($id)

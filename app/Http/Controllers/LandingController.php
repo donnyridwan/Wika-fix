@@ -46,6 +46,9 @@ class LandingController extends Controller
         $tanggal = $request->input('tanggal');
         $airline = $request->input('airline');
 
+        // buat session tanggal
+        $request->session()->put('tanggal', $tanggal);
+
         $url = "https://flights.booking.com/flights/SUB.AIRPORT-SRG.AIRPORT/?type=ONEWAY&adults=1&cabinClass=ECONOMY&children=&from=$depature.AIRPORT&to=$destination.AIRPORT&fromCountry=ID&toCountry=ID&fromLocationName=Bandara+Internasional+Soekarno-Hatta&toLocationName=Bandara+Internasional+Ahmad+Yani&depart=$tanggal&sort=BEST&travelPurpose=leisure&aid=397594&label=gog235jc-1DCAEoggI46AdIElgDaGiIAQGYARK4ARfIAQzYAQPoAQH4AQKIAgGoAgO4AruUlK0GwAIB0gIkMjM1ZjkzNjMtNTJlMS00ODU0LTg0ZTgtMGNjNTdmZTVkOTc42AIE4AIB";
         $response = [];
 
@@ -82,10 +85,6 @@ class LandingController extends Controller
                 $harga = $this->findClassFromHtml($htmlContent, $classNameHarga);
                 $destination = $this->findClassFromHtml($htmlContent, $classDestination);
 
-                // Menyimpan data scraping ke dalam database atau melakukan operasi lain sesuai kebutuhan
-
-                // Menampilkan hasil scraping
-
                 $response = [];
                 for ($i = 0; $i < count($harga); $i++) {
                     $response[] = [
@@ -107,7 +106,10 @@ class LandingController extends Controller
             echo 'Error: ' . $e->getMessage();
         }
 
-        return view('landing.result')->with('response', $response);
+        return view('landing.result', [
+            'response' => $response,
+            'tanggal' => $tanggal
+        ]);
     }
 
     public function hasil()
@@ -119,19 +121,19 @@ class LandingController extends Controller
 
     public function detail($id)
     {
-        // Ambil data dari session
+        $tanggal = session('tanggal');
         $data = session('response');
         $pemesan = session('name');
-        // Initialize $selectedResult to handle cases where $id is not found
+        
         $selectedResult = null;
 
         if (isset($data[$id])) {
-            // Get the selected result
+            
             $selectedResult = $data[$id];
         }
 
         // Kirim data ke halaman detail
-        return view('landing.detail', compact('selectedResult', 'pemesan'));
+        return view('landing.detail', compact('selectedResult', 'pemesan', 'tanggal'));
     }
 
     public function tambah(Request $request)
@@ -161,7 +163,7 @@ class LandingController extends Controller
 
         // Menggunakan Query Builder Laravel dan Named Bindings untuk valuesnya
         DB::insert(
-            'INSERT INTO pesanan(kota_asal,Kota_Tujuan,jam_berangkat,jam_tiba,maskapai,harga,pemesan,penumpang, created_at) VALUES(:Kota_asal,:Kota_Tujuan,:jam_berangkat,:jam_tiba,:maskapai,:harga,:pemesan,:penumpang, :created_at)',
+            'INSERT INTO pesanan(kota_asal,Kota_Tujuan,jam_berangkat,jam_tiba,maskapai,harga,tanggal,pemesan,penumpang, created_at) VALUES(:Kota_asal,:Kota_Tujuan,:jam_berangkat,:jam_tiba,:maskapai,:harga,:tanggal,:pemesan,:penumpang, :created_at)',
             [
                 'Kota_asal' => $request->Kota_asal,
                 'Kota_Tujuan' => $request->Kota_Tujuan,
@@ -169,6 +171,7 @@ class LandingController extends Controller
                 'jam_tiba' => $request->jam_tiba,
                 'maskapai' => $request->maskapai,
                 'harga' => $request->harga,
+                'tanggal' => $request->session()->get('tanggal'),
                 'pemesan' => $request->pemesan,
                 'penumpang' => $penumpang,
                 'created_at' => NOW(),
