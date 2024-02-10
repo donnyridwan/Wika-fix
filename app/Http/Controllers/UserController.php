@@ -74,14 +74,14 @@ class UserController extends Controller
                 'id' => $id,
                 'nama' => $request->nama,
                 'email' => $request->email,
-                'password' => $hashedPassword, // Use the hashed password
+                'password' => $hashedPassword, 
                 'role' => $request->role,
                 'perusahaan' => $request->perusahaan,
                 'updated_at' => now(),
             ]
         );
 
-        return redirect()->route('user.index')->with('success', 'Data peminjam berhasil diubah');
+        return redirect()->route('user.index')->with('success', 'Data tiket berhasil diubah');
     }
 
     public function delete($id)

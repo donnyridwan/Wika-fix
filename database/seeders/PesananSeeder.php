@@ -24,6 +24,7 @@ class PesananSeeder extends Seeder
             'status' => 'proses',
             'pemesan' => 'User', // Sesuaikan dengan nama user yang telah ada di tabel 'users'
             'penumpang' => 'Penumpang 1, Penumpang 2',
+            'tanggal' => '2023-06-01',
             'created_at' => now(),
         ]);
     }

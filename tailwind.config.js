@@ -9,6 +9,7 @@ export default {
     extend: {
       colors: {
         'themeBlue' : '#0395FF',
+        'themeGray' : '#7E7D82'
       },
       backgroundImage: {
         'hero-pattern': "url('/assets/landing.jpg')",
